@@ -27,6 +27,9 @@ export class DishdetailComponent implements OnInit {
   commentBox: FormGroup;
   comment: Comment;
 
+  // Error Handling
+
+  errMess: string;
 
   formErrors = {
     author: '',
@@ -64,7 +67,9 @@ export class DishdetailComponent implements OnInit {
     this.route.params
       // tslint:disable-next-line: no-string-literal
       .pipe(switchMap((params: Params) => this.dishService.getDish(params['id'])))
-      .subscribe((dish) => { this.dish = dish; this.setPrevNext(dish.id); });
+      .subscribe((dish) => { this.dish = dish; this.setPrevNext(dish.id); },
+      // tslint:disable-next-line: no-angle-bracket-type-assertion
+      errmess => this.errMess = <any> errmess);
   }
 
   // Dish Details

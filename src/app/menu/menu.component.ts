@@ -9,13 +9,16 @@ import { DishService } from '../services/dish.service';
 })
 export class MenuComponent implements OnInit {
 
-  dishes: Dish[] ;
+  dishes: Dish[];
+  errMess: string;
 
   constructor(private dishService: DishService, @Inject('BaseURL') public BaseURL) { }
 
   ngOnInit() {
     this.dishService.getDishes()
-    .subscribe ((dishes) => this.dishes = dishes);
+    .subscribe ((dishes) => this.dishes = dishes,
+    // tslint:disable-next-line: no-angle-bracket-type-assertion
+    errmess => this.errMess = <any> errmess);
   }
 
 }
