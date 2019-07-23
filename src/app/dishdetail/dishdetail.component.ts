@@ -31,6 +31,10 @@ export class DishdetailComponent implements OnInit {
 
   errMess: string;
 
+  // Updating the server
+
+  dishCopy: Dish;
+
   formErrors = {
     author: '',
     rating: 5,
@@ -67,7 +71,7 @@ export class DishdetailComponent implements OnInit {
     this.route.params
       // tslint:disable-next-line: no-string-literal
       .pipe(switchMap((params: Params) => this.dishService.getDish(params['id'])))
-      .subscribe((dish) => { this.dish = dish; this.setPrevNext(dish.id); },
+      .subscribe((dish) => { this.dish = dish; this.dishCopy = dish; this.setPrevNext(dish.id); },
       // tslint:disable-next-line: no-angle-bracket-type-assertion
       errmess => this.errMess = <any> errmess);
   }
@@ -124,9 +128,20 @@ export class DishdetailComponent implements OnInit {
     this.comment = this.commentBox.value;
     const x = Date();
     this.comment.date = x.toString();
-    console.log(this.comment);
-    this.dish.comments.push(this.comment);
-    this.commentBox.reset();
+    this.dishCopy.comments.push(this.comment);
+    this.dishService.putDish(this.dishCopy)
+    .subscribe( dish => {
+      this.dish = dish;
+      this.dishCopy = dish;
+    },
+    // tslint:disable-next-line: no-angle-bracket-type-assertion
+    errmess => {this.dish = null; this.dishCopy = null; this.errMess = <any> errmess; });
+    this.commentBoxDirective.resetForm();
+    this.commentBox.reset({
+      author: '',
+      rating: 5,
+      comment: ''
+    });
   }
 
 }
