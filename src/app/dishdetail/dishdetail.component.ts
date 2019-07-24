@@ -8,12 +8,26 @@ import { Dish } from '../shared/dish';
 import { DishService } from '../services/dish.service';
 import { Comment } from '../shared/comment';
 import { stringify } from 'querystring';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 
 @Component({
   selector: 'app-dishdetail',
   templateUrl: './dishdetail.component.html',
-  styleUrls: ['./dishdetail.component.scss']
+  styleUrls: ['./dishdetail.component.scss'],
+  animations: [
+    trigger('visibility', [
+      state('shown', style({
+        opacity: 1,
+        transform: 'scale(1)'
+      })),
+      state('hidden', style({
+        opacity: 0,
+        transform: 'scale(.5)'
+      })),
+      transition('* => *', animate('0.5s ease-in-out'))
+    ])
+  ]
 })
 export class DishdetailComponent implements OnInit {
 
@@ -34,6 +48,10 @@ export class DishdetailComponent implements OnInit {
   // Updating the server
 
   dishCopy: Dish;
+
+  // animations
+
+  visibility = 'shown';
 
   formErrors = {
     author: '',
@@ -70,8 +88,8 @@ export class DishdetailComponent implements OnInit {
       .subscribe((dishIds) => this.dishIds = dishIds);
     this.route.params
       // tslint:disable-next-line: no-string-literal
-      .pipe(switchMap((params: Params) => this.dishService.getDish(params['id'])))
-      .subscribe((dish) => { this.dish = dish; this.dishCopy = dish; this.setPrevNext(dish.id); },
+      .pipe(switchMap((params: Params) => {this.visibility = 'hidden'; return this.dishService.getDish(params['id']); }))
+      .subscribe((dish) => { this.dish = dish; this.dishCopy = dish; this.setPrevNext(dish.id); this.visibility = 'shown'},
       // tslint:disable-next-line: no-angle-bracket-type-assertion
       errmess => this.errMess = <any> errmess);
   }
