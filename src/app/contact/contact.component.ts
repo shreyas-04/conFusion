@@ -3,10 +3,12 @@ import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Feedback , ContactType } from '../shared/feedback';
 import { FeedbackService } from '../services/feedback.service';
 
+
+
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss']
+  styleUrls: ['./contact.component.scss'],
 })
 export class ContactComponent implements OnInit {
 

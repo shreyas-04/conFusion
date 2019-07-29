@@ -8,26 +8,22 @@ import { Dish } from '../shared/dish';
 import { DishService } from '../services/dish.service';
 import { Comment } from '../shared/comment';
 import { stringify } from 'querystring';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { flyInOut, visibility } from '../animations/app.animation';
 
 
 @Component({
   selector: 'app-dishdetail',
   templateUrl: './dishdetail.component.html',
   styleUrls: ['./dishdetail.component.scss'],
-  animations: [
-    trigger('visibility', [
-      state('shown', style({
-        opacity: 1,
-        transform: 'scale(1)'
-      })),
-      state('hidden', style({
-        opacity: 0,
-        transform: 'scale(.5)'
-      })),
-      transition('* => *', animate('0.5s ease-in-out'))
-    ])
-  ]
+  // // tslint:disable-next-line: no-host-metadata-property
+  // host: {
+  //   '[@flyInOut]': 'true',
+  //   // tslint:disable-next-line: object-literal-key-quotes
+  //   'style': 'display: block;'
+  // },
+  // animations: [
+  //   flyInOut()
+  // ]
 })
 export class DishdetailComponent implements OnInit {
 
