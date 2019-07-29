@@ -89,7 +89,7 @@ export class DishdetailComponent implements OnInit {
     this.route.params
       // tslint:disable-next-line: no-string-literal
       .pipe(switchMap((params: Params) => {this.visibility = 'hidden'; return this.dishService.getDish(params['id']); }))
-      .subscribe((dish) => { this.dish = dish; this.dishCopy = dish; this.setPrevNext(dish.id); this.visibility = 'shown'},
+      .subscribe((dish) => { this.dish = dish; this.dishCopy = dish; this.setPrevNext(dish.id); this.visibility = 'shown'; },
       // tslint:disable-next-line: no-angle-bracket-type-assertion
       errmess => this.errMess = <any> errmess);
   }
@@ -147,6 +147,12 @@ export class DishdetailComponent implements OnInit {
     const x = Date();
     this.comment.date = x.toString();
     this.dishCopy.comments.push(this.comment);
+    this.commentBox.reset({
+      author: '',
+      rating: 5,
+      comment: ''
+    });
+    this.commentBoxDirective.resetForm();
     this.dishService.putDish(this.dishCopy)
     .subscribe( dish => {
       this.dish = dish;
@@ -154,12 +160,6 @@ export class DishdetailComponent implements OnInit {
     },
     // tslint:disable-next-line: no-angle-bracket-type-assertion
     errmess => {this.dish = null; this.dishCopy = null; this.errMess = <any> errmess; });
-    this.commentBoxDirective.resetForm();
-    this.commentBox.reset({
-      author: '',
-      rating: 5,
-      comment: ''
-    });
   }
 
 }

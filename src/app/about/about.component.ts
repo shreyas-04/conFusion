@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { LeaderService} from '../services/leader.service';
 import { Leader } from '../shared/leader';
 
@@ -13,11 +13,16 @@ export class AboutComponent implements OnInit {
 
   selectedLeader: Leader;
 
-  constructor(private leaderService: LeaderService) { }
+  leadersErrMess: string;
+
+  constructor(private leaderService: LeaderService, @Inject ('BaseURL') public BaseURL) { }
 
   ngOnInit() {
     this.leaderService.getLeaders()
-    .subscribe ((leaders) => this.leaders = leaders);
+    .subscribe ((leaders) => this.leaders = leaders,
+    // tslint:disable-next-line: no-angle-bracket-type-assertion
+    errmess => this.leadersErrMess = <any> errmess);
+
   }
 
   onSelect(leader: Leader) {

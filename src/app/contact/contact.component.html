@@ -37,7 +37,7 @@
     <div fxFlex fxFlexOffset="20px" class="form-size">
         <h3>Send us your Feedback</h3>
         <p>{{ feedbackForm.value | json }} {{ feedbackForm.status | json }}</p>
-        <form novalidate [formGroup]="feedbackForm" #fform="ngForm" (ngSubmit)="onSubmit()">
+        <form novalidate [formGroup]="feedbackForm" #fform="ngForm" (ngSubmit)="onSubmit()" [hidden]="validForm">
             <p>
                 <mat-form-field class="half-width">
                     <input matInput formControlName="firstname" placeholder="First Name" type="text" required>
@@ -60,7 +60,7 @@
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="half-width">
-                    <input matInput formControlName="email" placeholder="Email" type="text" email required>
+                    <input matInput formControlName="email" placeholder="Email" type="email" email="" required>
                     <mat-error *ngIf="formErrors.email">
                         {{ formErrors.email }}
                     </mat-error>
@@ -86,5 +86,20 @@
             </p>
             <button type="submit" mat-button class="background-primary text-floral-white" [disabled]="feedbackForm.invalid">Submit</button>
         </form>
+
+    </div>
+    <div fxFlex [fxShow]="(!copyFeedback && validForm) || errMess">
+        <h4>Submitting Form</h4>
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <div fxFlex *ngIf="copyFeedback">
+        <p>First Name: {{copyFeedback.firstname}}</p>
+        <p>Last Name: {{copyFeedback.lastname}}</p>
+        <p>Tel. Number: {{copyFeedback.telnum}}</p>
+        <p>Email: {{copyFeedback.email}}</p>
+        <p>Contact You?: {{copyFeedback.agree}}</p>
+        <p>How?: {{copyFeedback.contacttype}}</p>
+        <p>Feedback: {{copyFeedback.message}}</p>
     </div>
 </div>

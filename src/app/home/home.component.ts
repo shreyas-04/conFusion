@@ -18,7 +18,9 @@ export class HomeComponent implements OnInit {
   dish: Dish;
   promotion: Promotion;
   leader: Leader;
-  dishErrMess : string;
+  dishErrMess: string;
+  promoErrMess: string;
+  leaderErrMess: string;
 
   constructor(private dishService: DishService,
               private promotionService: PromotionService,
@@ -32,9 +34,13 @@ export class HomeComponent implements OnInit {
     // tslint:disable-next-line: no-angle-bracket-type-assertion
     errmess => this.dishErrMess = <any> errmess);
     this.promotionService.getFeaturedPromotion()
-    .subscribe ((promotion) => this.promotion = promotion);
+    .subscribe ((promotion) => this.promotion = promotion,
+    // tslint:disable-next-line: no-angle-bracket-type-assertion
+    errmess => this.promoErrMess = <any> errmess);
     this.leaderService.getFeaturedLeader()
-    .subscribe ((leader) => this.leader = leader);
+    .subscribe ((leader) => this.leader = leader,
+    // tslint:disable-next-line: no-angle-bracket-type-assertion
+    errmess => this.leaderErrMess = <any> errmess);
   }
 
 }

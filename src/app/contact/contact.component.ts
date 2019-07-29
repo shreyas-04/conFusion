@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Feedback , ContactType } from '../shared/feedback';
+import { FeedbackService } from '../services/feedback.service';
 
 @Component({
   selector: 'app-contact',
@@ -11,7 +12,10 @@ export class ContactComponent implements OnInit {
 
   feedbackForm: FormGroup;
   feedback: Feedback;
+  copyFeedback: Feedback;
   contactType = ContactType;
+  errMess: string;
+  validForm = false;
 
   @ViewChild ('fform', {static: false}) feedbackFormDirective;
 
@@ -44,7 +48,7 @@ export class ContactComponent implements OnInit {
   };
 
 
-  constructor( private fb: FormBuilder) {
+  constructor( private fb: FormBuilder, private feedbackService: FeedbackService) {
     this.createForm();
    }
 
@@ -56,7 +60,7 @@ export class ContactComponent implements OnInit {
       firstname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
       lastname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
       telnum: [0, [Validators.required, Validators.pattern]],
-      email: ['', Validators.required, Validators.email],
+      email: ['', Validators.required],
       agree: false,
       contacttype: 'None',
       message: ''
@@ -91,7 +95,15 @@ export class ContactComponent implements OnInit {
 
   onSubmit() {
     this.feedback = this.feedbackForm.value;
-    console.log(this.feedback);
+    this.validForm = true;
+    // Submitting Feedback
+    this.feedbackService.submitFeedback(this.feedback)
+    .subscribe((feedback) => {
+      this.feedback = null;
+      this.copyFeedback = feedback; },
+    // tslint:disable-next-line: no-angle-bracket-type-assertion
+    errmess => {  this.errMess = <any> errmess; });
+    // Reset Form
     this.feedbackForm.reset({
       firstname: '',
       lastname: '',
@@ -102,5 +114,9 @@ export class ContactComponent implements OnInit {
       message: ''
     });
     this.feedbackFormDirective.resetForm();
+    // Showing form value for 5 seconds
+    setTimeout(() => {
+      this.validForm = false;
+      this.copyFeedback = null; }, 5000);
   }
 }
